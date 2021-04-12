@@ -9,6 +9,6 @@ namespace Library.Services.Books.Contracts
     {
         int Add(AddBookDto dto);
         void Update(int id, UpdateBookDto dto);
-
+        List<GetByBookCategoryDto> GetByBookCategory(int bookCategoryId);
     }
 }

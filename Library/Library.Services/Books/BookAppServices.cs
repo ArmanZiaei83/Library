@@ -74,5 +74,11 @@ namespace Library.Services.Books
                 throw new BookNotFoundException();
             }
         }
+
+        public List<GetByBookCategoryDto> GetByBookCategory(int bookCategoryId)
+        {
+            ThrowExceptionWhenBookCategroyNotFound(bookCategoryId);
+            return _repository.GetByBookCategory(bookCategoryId);
+        }
     }
 }

@@ -28,5 +28,11 @@ namespace Library.RestApi.Controllers
         {
              services.Update(id, dto);
         }
+
+        [HttpGet("bookCategoryId")]
+        public List<GetByBookCategoryDto> GetByBookCategory(int bookCategoryId)
+        {
+            return services.GetByBookCategory(bookCategoryId);
+        }
     }
 }

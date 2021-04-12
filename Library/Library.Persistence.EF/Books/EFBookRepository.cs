@@ -26,5 +26,19 @@ namespace Library.Persistence.EF.Books
             return _context.Books
                            .Find(id);
         }
+
+        public List<GetByBookCategoryDto> GetByBookCategory(int bookCategoryId)
+        {
+            return _context.Books
+                           .Where(_ => _.BookCategoryId == bookCategoryId)
+                           .Select(_ => new GetByBookCategoryDto
+                           {
+                               Name = _.Name,
+                               Author = _.Author,
+                               AgeGroup = _.AgeGroup,
+                               Id = _.Id
+                           })
+                           .ToList();
+        }
     }
 }

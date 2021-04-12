@@ -140,5 +140,48 @@ namespace Library.Test.Unit.Books
 
             expected.Should().Throw<BookNotFoundException>();
         }
+
+        [Fact]
+        public void GetbyBookCategory_get_by_categroyId_book_properly()
+        {
+            var bookCategroy = new BookCategoryFactory()
+                                        .WithTitle("dummy")
+                                        .Generate();
+            var bookForList1 = new BookBuilder()
+                            .WithName("dummy-1")
+                            .WithBookCategroy(bookCategroy)
+                            .Generate();
+            var bookForList2 = new BookBuilder()
+                            .WithName("dummy-2")
+                            .WithBookCategroy(bookCategroy)
+                            .Generate();
+            _context.Manipulate(_ =>
+                _.Books.AddRange(bookForList1, bookForList2));
+
+            var actual = _sut.GetByBookCategory(bookCategroy.Id);
+
+            var expected = _context.Books
+                                   .Where(_ => _.BookCategoryId == bookCategroy.Id)
+                                   .Select(_ => new GetByBookCategoryDto
+                                   {
+                                       Name = _.Name
+                                   })
+                                   .ToList();
+            expected.Should().HaveCount(actual.Count);
+            expected.Select(_ => _.Name)
+                    .Should()
+                    .BeEquivalentTo(actual.Select(_ => _.Name));
+        }
+
+        [Fact]
+        public void GetbyBookCategory_throw_exception_when_book_categroy_not_found()
+        {
+            var bookCategroy = new BookCategoryFactory()
+                                       .Generate();
+
+            Action expected =()=> _sut.GetByBookCategory(bookCategroy.Id);
+
+            expected.Should().Throw<BookCategroyNotFoundException>();
+        }
     }
 }
