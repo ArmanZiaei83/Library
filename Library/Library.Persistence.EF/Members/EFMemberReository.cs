@@ -18,7 +18,14 @@ namespace Library.Persistence.EF.Members
 
         public void Add(Member member)
         {
-            _context.Members.Add(member);
+            _context.Members
+                    .Add(member);
+        }
+
+        public Member FindById(int id)
+        {
+            return _context.Members
+                           .Find(id);
         }
     }
 }

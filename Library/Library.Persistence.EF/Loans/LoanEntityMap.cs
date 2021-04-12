@@ -17,6 +17,8 @@ namespace Library.Persistence.EF.Loans
 
             _.Property(_ => _.Id).IsRequired().ValueGeneratedOnAdd();
 
+            _.Property(_ => _.ReturnDate).IsRequired();
+
             _.Property(_ => _.BookId).IsRequired();
 
             _.Property(_ => _.MemeberId).IsRequired();
