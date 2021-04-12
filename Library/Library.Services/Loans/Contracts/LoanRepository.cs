@@ -8,5 +8,6 @@ namespace Library.Services.Loans.Contracts
     public interface LoanRepository
     {
         void Add(Loan loan);
+        Loan FindById(int id);
     }
 }

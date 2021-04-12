@@ -19,5 +19,11 @@ namespace Library.Persistence.EF.Loans
         {
             _context.Loans.Add(loan);
         }
+
+        public Loan FindById(int id)
+        {
+            return _context.Loans
+                           .Find(id);
+        }
     }
 }

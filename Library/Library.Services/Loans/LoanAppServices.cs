@@ -78,5 +78,30 @@ namespace Library.Services.Loans
             }
         }
 
+        public void GetBook(int id)
+        {
+            var loan = _repository.FindById(id);
+
+            ThorwExceptionWhenLoanNotFound(loan);
+
+            ThorwExceptionWhenWasDaley(loan.ReturnDate, DateTime.Now);
+        }
+
+        private void ThorwExceptionWhenLoanNotFound(Loan loan)
+        {
+            if (loan == null)
+            {
+                throw new LoanNotFoundException();
+            }
+        }
+
+        private void ThorwExceptionWhenWasDaley(DateTime loanReturnDate, DateTime returnDate)
+        {
+            if (loanReturnDate < returnDate)
+            {
+                throw new DelayInBookDeliveryException();
+            }
+        }
+
     }
 }

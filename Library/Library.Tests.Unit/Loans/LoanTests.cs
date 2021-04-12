@@ -134,5 +134,39 @@ namespace Library.Tests.Unit.Loans
             expected.Should().Throw<ThisBookIsNotAllowedForYourAgeException>();
         }
 
+        [Fact]
+        public void GetBook_throw_exception_when_was_daley()
+        {
+            var book = new BookBuilder()
+                            .Generate();
+            var member = new MemberBuilder()
+                            .Generate();
+            var loan = new LoanBuilder()
+                            .WithMember(member)
+                            .WithBook(book)
+                            .WithReturnDate(DateTime.Now)
+                            .Generate();
+            _context.Manipulate(_ => _.Loans.Add(loan));
+
+            Action expected = () => _sut.GetBook(loan.Id);
+
+            expected.Should().Throw<DelayInBookDeliveryException>();
+        }
+
+        [Fact]
+        public void GetBook_thorw_exception_when_loan_not_found()
+        {
+            var loan = new LoanBuilder()
+                            .Generate();
+            //var getBookDto = new GetBookDto
+            //{
+            //    ReturnDate = loan.ReturnDate.AddDays(1)
+            //};
+
+            Action expected = () => _sut.GetBook(loan.Id);
+
+            expected.Should().Throw<LoanNotFoundException>();
+        }
+
     }
 }
