@@ -1,6 +1,12 @@
+using Library.Infrastructure.Application;
+using Library.Persistence.EF;
+using Library.Persistence.EF.BookCategories;
+using Library.Services.BookCategories;
+using Library.Services.BookCategories.Contracts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -25,6 +31,18 @@ namespace Library.RestApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddDbContext<EFDataContext>(options =>
+            {
+                options.UseSqlServer("Server=.;Database=Library;Trusted_Connection=True;");
+            });
+
+            services.AddScoped<UnitOfWork, EFUnitOfWork>();
+
+            services.AddScoped<BookCategroyServices, BookCategoryAppServices>();
+            services.AddScoped<BookCategroyRepository, EFBookCategroyRepository>();
+
+            services.AddSwaggerGen();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -38,6 +56,13 @@ namespace Library.RestApi
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            });
 
             app.UseEndpoints(endpoints =>
             {
