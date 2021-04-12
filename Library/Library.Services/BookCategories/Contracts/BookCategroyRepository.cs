@@ -8,5 +8,6 @@ namespace Library.Services.BookCategories.Contracts
     public interface BookCategroyRepository
     {
         void Add(BookCategory bookCategory);
+        bool IsExistsById(int bookCategoryId);
     }
 }

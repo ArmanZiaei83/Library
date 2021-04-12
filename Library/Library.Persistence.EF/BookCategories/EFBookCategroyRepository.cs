@@ -21,5 +21,11 @@ namespace Library.Persistence.EF.BookCategories
             _context.BookCategories
                     .Add(bookCategory);
         }
+
+        public bool IsExistsById(int bookCategoryId)
+        {
+            return _context.BookCategories
+                           .Any(_ => _.Id == bookCategoryId);
+        }
     }
 }
