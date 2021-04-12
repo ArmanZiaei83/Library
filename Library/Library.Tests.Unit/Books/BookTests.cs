@@ -10,6 +10,7 @@ using Library.Services.BookCategories.Exceptions;
 using Library.Services.BookCategories.TestTools;
 using Library.Services.Books;
 using Library.Services.Books.Contracts;
+using Library.Services.Books.Exceptions;
 using Library.Services.Books.TestTools;
 using System;
 using System.Collections.Generic;
@@ -71,6 +72,73 @@ namespace Library.Test.Unit.Books
             Action expected = () => _sut.Add(dto);
 
             expected.Should().Throw<BookCategroyNotFoundException>();
+        }
+
+        [Fact]
+        public void Update_update_a_book_properly()
+        {
+            var bookCategroy = new BookCategoryFactory()
+                                        .WithTitle("dummy")
+                                        .Generate();
+            var book = new BookBuilder()
+                            .WithName("dummy-name")
+                            .WithBookCategroy(bookCategroy)
+                            .WithByBookCategroyId(bookCategroy.Id)
+                            .Generate();
+            _context.Manipulate(_ => _.Books.Add(book));
+            var bookCategroyUpdate = new BookCategoryFactory()
+                                        .WithTitle("dummy-update")
+                                        .Generate();
+            _context.Manipulate(_ => _.BookCategories.Add(bookCategroyUpdate));
+            var dto = new BookBuilder()
+                            .WithName("dummy-name-update")
+                            .WithByBookCategroyId(bookCategroyUpdate.Id)
+                            .GenerateUpdateBookDto();
+
+            _sut.Update(book.Id, dto);
+
+            var expected = _readDatacontext.Books.Single(_ => _.Id == book.Id);
+            expected.Name.Should().Be(dto.Name);
+            expected.BookCategoryId.Should().Be(dto.BookCategoryId);
+        }
+
+        [Fact]
+        public void Update_throw_exception_when_book_categroy_not_found()
+        {
+            var bookCategroy = new BookCategoryFactory()
+                                        .WithTitle("dummy")
+                                        .Generate();
+            var book = new BookBuilder()
+                            .WithName("dummy-name")
+                            .WithBookCategroy(bookCategroy)
+                            .WithByBookCategroyId(bookCategroy.Id)
+                            .Generate();
+            _context.Manipulate(_ => _.Books.Add(book));
+            var bookCategroyUpdate = new BookCategoryFactory()
+                                        .WithTitle("dummy-update")
+                                        .Generate();
+            var dto = new BookBuilder()
+                            .WithName("dummy-name-update")
+                            .WithBookCategroy(bookCategroyUpdate)
+                            .WithByBookCategroyId(bookCategroyUpdate.Id)
+                            .GenerateUpdateBookDto();
+
+            Action expected = () => _sut.Update(book.Id, dto);
+
+            expected.Should().Throw<BookCategroyNotFoundException>();
+        }
+
+        [Fact]
+        public void Update_throw_exception_when_book_not_found()
+        {
+            var book = new BookBuilder()
+                            .Generate();
+            var dto = new BookBuilder()
+                            .GenerateUpdateBookDto();
+
+            Action expected = () => _sut.Update(book.Id, dto);
+
+            expected.Should().Throw<BookNotFoundException>();
         }
     }
 }

@@ -22,5 +22,11 @@ namespace Library.RestApi.Controllers
         {
             return services.Add(dto);
         }
+
+        [HttpPut("id")]
+        public void Update(int id,UpdateBookDto dto)
+        {
+             services.Update(id, dto);
+        }
     }
 }

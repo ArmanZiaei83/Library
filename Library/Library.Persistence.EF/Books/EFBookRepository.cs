@@ -21,5 +21,10 @@ namespace Library.Persistence.EF.Books
                     .Add(book);
         }
 
+        public Book FindById(int id)
+        {
+            return _context.Books
+                           .Find(id);
+        }
     }
 }

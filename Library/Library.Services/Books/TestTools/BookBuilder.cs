@@ -66,5 +66,16 @@ namespace Library.Services.Books.TestTools
             };
         }
 
+        public UpdateBookDto GenerateUpdateBookDto()
+        {
+            return new UpdateBookDto
+            {
+                Name = "dummy-name",
+                Author = "dummy-author",
+                AgeGroup = 1,
+                BookCategoryId = _bookCategroyId
+            };
+        }
+
     }
 }
