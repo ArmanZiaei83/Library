@@ -2,10 +2,13 @@ using Library.Infrastructure.Application;
 using Library.Persistence.EF;
 using Library.Persistence.EF.BookCategories;
 using Library.Persistence.EF.Books;
+using Library.Persistence.EF.Members;
 using Library.Services.BookCategories;
 using Library.Services.BookCategories.Contracts;
 using Library.Services.Books;
 using Library.Services.Books.Contracts;
+using Library.Services.Members;
+using Library.Services.Members.Contracts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -47,6 +50,9 @@ namespace Library.RestApi
 
             services.AddScoped<BookServices, BookAppServices>();
             services.AddScoped<BookRepository, EFBookRepository>();
+
+            services.AddScoped<MemberServices, MemberAppServices>();
+            services.AddScoped<MemberRepository, EFMemberReository>();
 
             services.AddSwaggerGen();
         }
