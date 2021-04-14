@@ -135,7 +135,7 @@ namespace Library.Tests.Unit.Loans
         }
 
         [Fact]
-        public void GetBook_throw_exception_when_was_daley()
+        public void BookDeliveryTake_throw_exception_when_was_daley()
         {
             var book = new BookBuilder()
                             .Generate();
@@ -144,26 +144,28 @@ namespace Library.Tests.Unit.Loans
             var loan = new LoanBuilder()
                             .WithMember(member)
                             .WithBook(book)
-                            .WithReturnDate(DateTime.Now)
+                            .WithReturnDate(DateTime.Now.AddDays(1))
                             .Generate();
             _context.Manipulate(_ => _.Loans.Add(loan));
+            var returnDateFromMember = DateTime.Now.AddDays(2);
+            var bookDeliveryDto = new LoanBuilder()
+                                       .GenerateBookDeliveryTakeDto(loan.ReturnDate.AddDays(1));
 
-            Action expected = () => _sut.GetBook(loan.Id);
+
+            Action expected = () => _sut.BookDeliveryTake(loan.Id, bookDeliveryDto);
 
             expected.Should().Throw<DelayInBookDeliveryException>();
         }
 
         [Fact]
-        public void GetBook_thorw_exception_when_loan_not_found()
+        public void BookDeliveryTake_thorw_exception_when_loan_not_found()
         {
             var loan = new LoanBuilder()
                             .Generate();
-            //var getBookDto = new GetBookDto
-            //{
-            //    ReturnDate = loan.ReturnDate.AddDays(1)
-            //};
+            var bookDeliveryDto = new LoanBuilder()
+                                       .GenerateBookDeliveryTakeDto(loan.ReturnDate.AddDays(1));
 
-            Action expected = () => _sut.GetBook(loan.Id);
+            Action expected = () => _sut.BookDeliveryTake(loan.Id, bookDeliveryDto);
 
             expected.Should().Throw<LoanNotFoundException>();
         }

@@ -23,10 +23,10 @@ namespace Library.RestApi.Controllers
             return services.Add(dto);
         }
 
-        [HttpGet("LoanId")]
-        public void GetBook(int LoanId)
+        [HttpPost("LoanId")]
+        public void BookDeliveryTake(int LoanId,BookDeliveryTakeDto dto)
         {
-            services.GetBook(LoanId);
+            services.BookDeliveryTake(LoanId,dto);
         }
     }
 }

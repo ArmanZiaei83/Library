@@ -78,13 +78,13 @@ namespace Library.Services.Loans
             }
         }
 
-        public void GetBook(int id)
+        public void BookDeliveryTake(int id,BookDeliveryTakeDto dto)
         {
             var loan = _repository.FindById(id);
 
             ThorwExceptionWhenLoanNotFound(loan);
 
-            ThorwExceptionWhenWasDaley(loan.ReturnDate, DateTime.Now);
+            ThorwExceptionWhenWasDaley(loan.ReturnDate,dto.ReturnDate);
         }
 
         private void ThorwExceptionWhenLoanNotFound(Loan loan)
@@ -95,9 +95,9 @@ namespace Library.Services.Loans
             }
         }
 
-        private void ThorwExceptionWhenWasDaley(DateTime loanReturnDate, DateTime returnDate)
+        private void ThorwExceptionWhenWasDaley(DateTime returnDateInLoan, DateTime returnDateInGetDeliver)
         {
-            if (loanReturnDate < returnDate)
+            if (returnDateInLoan < returnDateInGetDeliver)
             {
                 throw new DelayInBookDeliveryException();
             }

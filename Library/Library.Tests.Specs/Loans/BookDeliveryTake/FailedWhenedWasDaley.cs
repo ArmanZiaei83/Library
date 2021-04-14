@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Text;
 using Xunit;
 
-namespace Library.Tests.Specs.Loans.GetBook
+namespace Library.Tests.Specs.Loans.BookDeliveryTake
 {
     public class FailedWhenedWasDaley
     {
@@ -33,6 +33,7 @@ namespace Library.Tests.Specs.Loans.GetBook
         private MemberRepository _memberRepository;
         private LoanServices _sut;
         private Action _expected;
+        private BookDeliveryTakeDto _bookDeliveryDtoDto;
 
         public FailedWhenedWasDaley()
         {
@@ -69,7 +70,7 @@ namespace Library.Tests.Specs.Loans.GetBook
             _loan = new LoanBuilder()
                             .WithMember(member)
                             .WithBook(book)
-                            .WithReturnDate(DateTime.Now)
+                            .WithReturnDate(DateTime.Now.AddDays(1))
                             .Generate();
             _context.Manipulate(_ => _.Loans.Add(_loan));
         }
@@ -81,12 +82,15 @@ namespace Library.Tests.Specs.Loans.GetBook
 
         private void When()
         {
-            _expected = () => _sut.GetBook(_loan.Id);
+            _bookDeliveryDtoDto = new LoanBuilder()
+                                        .GenerateBookDeliveryTakeDto(_loan.ReturnDate.AddDays(1));
+            _expected = () => _sut.BookDeliveryTake(_loan.Id, _bookDeliveryDtoDto);
         }
 
         //باید خطایی با عنوان "تاخیر در تحویل کتاب" رخ دهد
         private void Then()
         {
+            _bookDeliveryDtoDto.ReturnDate.Should().BeAfter(_loan.ReturnDate);
             _expected.Should().Throw<DelayInBookDeliveryException>();
         }
 

@@ -62,5 +62,10 @@ namespace Library.Services.Loans.TestTools
             _bookId = bookId;
             return this;
         }
+
+        public BookDeliveryTakeDto GenerateBookDeliveryTakeDto(DateTime returnDate)
+        {
+            return new BookDeliveryTakeDto { ReturnDate = returnDate };
+        }
     }
 }
